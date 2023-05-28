@@ -21,7 +21,10 @@ interface SigninData {
 export class AuthService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async signup({ name, phone, email, password }: SignupData) {
+  async signup(
+    { name, phone, email, password }: SignupData,
+    userType: UserType,
+  ) {
     const userExists = await this.prismaService.user.findUnique({
       where: {
         email,
@@ -35,7 +38,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.prismaService.user.create({
       data: {
-        user_type: UserType.BUYER,
+        user_type: userType,
         name,
         phone,
         email,
