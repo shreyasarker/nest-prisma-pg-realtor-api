@@ -1,5 +1,4 @@
 import { ConflictException, HttpException, Injectable } from '@nestjs/common';
-import { SignupDto } from '../dtos/auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
@@ -81,5 +80,10 @@ export class AuthService {
       },
     );
     return token;
+  }
+
+  generateProductKey(email: string, userType: UserType) {
+    const key = `${email}-${userType}-${env.PRODUCT_SECRET}`;
+    return bcrypt.hash(key, 10);
   }
 }
