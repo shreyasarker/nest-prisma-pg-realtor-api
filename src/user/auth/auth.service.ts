@@ -79,7 +79,7 @@ export class AuthService {
       },
       env.JWT_SECRET,
       {
-        expiresIn: env.JWT_EXPIRES_IN,
+        expiresIn: parseInt(env.JWT_EXPIRES_IN),
       },
     );
     return token;
