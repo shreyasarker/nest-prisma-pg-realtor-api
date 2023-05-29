@@ -169,3 +169,9 @@ export class UpdateHomeDto {
   @IsNotEmpty()
   property_type?: PropertyType;
 }
+
+export class InquireDto {
+  @IsString()
+  @IsNotEmpty()
+  message: string;
+}
