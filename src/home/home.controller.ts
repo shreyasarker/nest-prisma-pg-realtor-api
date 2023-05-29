@@ -9,11 +9,14 @@ import {
   ParseIntPipe,
   Body,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDto, HomeResponseDto, UpdateHomeDto } from './dtos/home.dto';
-import { PropertyType } from '@prisma/client';
+import { PropertyType, UserType } from '@prisma/client';
 import { User, UserData } from 'src/user/decorators/user.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('home')
 export class HomeController {
@@ -46,11 +49,16 @@ export class HomeController {
   getHomeById(@Param('id', ParseIntPipe) id: number) {
     return this.homeService.getHomeById(id);
   }
+
+  @Roles(UserType.REALTOR)
+  @UseGuards(AuthGuard)
   @Post()
   storeHome(@Body() body: CreateHomeDto, @User() user: UserData) {
     return this.homeService.storeHome(body, user.id);
   }
 
+  @Roles(UserType.REALTOR)
+  @UseGuards(AuthGuard)
   @Put(':id')
   async updateHome(
     @Body() body: UpdateHomeDto,
@@ -65,6 +73,8 @@ export class HomeController {
     return this.homeService.updateHome(body, id);
   }
 
+  @Roles(UserType.REALTOR)
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteHome(
     @Param('id', ParseIntPipe) id: number,
